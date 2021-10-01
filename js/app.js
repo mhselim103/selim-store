@@ -1,17 +1,15 @@
+// load api 
 const loadProducts = () => {
   const url = `https://fakestoreapi.com/products`;
   fetch(url)
-    .then((response) => response.json())
-    .then((data) => showProducts(data));
+    .then(res => res.json())
+    .then(data => showProducts(data));
 };
 loadProducts();
-
-
 // show all product in UI 
 const showProducts = (products) => {
-  const allProducts = products.map((pd) => pd);
+  const allProducts = products.map(pd => pd);
   for (const product of allProducts) {
-    // const image = product.images;
     const div = document.createElement("div");
     div.classList.add("product");
     div.innerHTML = `<div class="single-product">
@@ -22,12 +20,12 @@ const showProducts = (products) => {
       <p>Category: ${product.category}</p>
       <p>Rating: ${product.rating.rate} (${product.rating.count})</p>
       <h2>Price: $ ${product.price}</h2>
-      <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
-      `;
+      <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">Add to cart</button>
+      <button onclick="searchSingleProduct(${product.id})" id="details-btn" class="btn btn-danger">Details</button></div>`;
     document.getElementById("all-products").appendChild(div);
   }
 };
+// calculation 
 let count = 0;
 const addToCart = (id, price) => {
   count = count + 1;
@@ -84,3 +82,32 @@ const updateTotal = () => {
   document.getElementById("total").innerText = grandTotal.toFixed(2);
 };
 
+// single product api 
+const searchSingleProduct = id => {
+  const url = `https://fakestoreapi.com/products/${id}`;
+  fetch(url)
+    .then(res => res.json())
+    .then(data => showDetails(data));
+};
+// show single product details 
+const showDetails = data => {
+  document.getElementById("show-single-product").innerHTML=``;
+    const div = document.createElement("div");
+     div.classList.add("product");
+  div.innerHTML = `<div class="text-center w-50 mx-auto ">
+      <div>
+    <img class="product-image" src=${data.image}></img>
+      </div>
+      <h3>${data.title}</h3>
+      <p>${data.description}</p>
+      <button onclick="clearHtml()" id="details-btn" class="btn btn-danger">Close</button></div>`;
+  document.getElementById("show-single-product").appendChild(div);
+}
+  //  clear details 
+const clearHtml = () => {
+  document.getElementById("show-single-product").innerHTML = ``;
+}
+// buy button 
+buyNow = () => {
+  alert('Thank You for purchasing');
+}
